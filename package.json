@@ -1,0 +1,24 @@
+{
+  "name": "library-manager",
+  "version": "1.0.0",
+  "description": "A library management system for a small library. This application leverages Sequelize ORM.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "javascript",
+    "sequelize",
+    "node"
+  ],
+  "author": "Dimitri Tolios",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "sequelize": "^4.22.6",
+    "sequelize-cli": "^3.0.0"
+  }
+}
