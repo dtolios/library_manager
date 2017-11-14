@@ -16,4 +16,9 @@ router.get('/all-patrons', function(req, res, next) {
     res.render('all_patrons', { title: 'Patrons' });
 });
 
+/* GET all loans page */
+router.get('/all-loans', function(req, res, next) {
+    res.render('all_loans', { title: 'Loans' });
+});
+
 module.exports = router;
