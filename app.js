@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 
 const index = require('./routes/index');
+const books = require('./routes/books');
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/books', books);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
