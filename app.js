@@ -3,6 +3,8 @@ const path = require('path');
 
 const index = require('./routes/index');
 const books = require('./routes/books');
+const loans = require('./routes/loans');
+const patrons = require('./routes/patrons');
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/books', books);
+app.use('/loans', loans);
+app.use('/patrons', patrons);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
