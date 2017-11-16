@@ -41,4 +41,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/new', function(req, res, next) {
+    res.render('books_new', {title: 'New Book'})
+});
+
 module.exports = router;
