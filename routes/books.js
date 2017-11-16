@@ -41,7 +41,6 @@ router.get('/', function(req, res, next) {
       }
     );
   }
-  console.log(include);
 
   db.book.findAll({include: include}).then(function(books) {
     res.render('books', { books: books, title: title });
@@ -50,14 +49,24 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/new', function(req, res, next) {
-  res.render('books/new', {book: db.book.build(), title: 'New Book'})
+router.get('/create', function(req, res, next) {
+  res.render('books/create', {book: db.book.build(), title: 'New Book'})
 });
 
 router.get('/:id', function(req, res, next) {
-  db.book.findById(req.params.id).then(function(book) {
+  db.book.findById(req.params.id,
+    {
+      include: [{
+        model: db.loan,
+        include: [{
+          model: db.book
+        },{
+          model: db.patron
+        }]
+      }]
+    }).then(function(book) {
     if(book) {
-      res.render('books/show', {book: book, title: book.title});
+      res.render('books/show', {book: book, loans: book.Loans, title: book.title});
     } else {
       res.sendStatus(404);
     }
@@ -66,10 +75,10 @@ router.get('/:id', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   db.book.create(req.body).then((book) => {
-    res.redirect('/books/' + book.id);
+    res.redirect('/books');
   }).catch(function(error) {
     if (error.name === "SequelizeValidationError") {
-      res.render('books_new', {
+      res.render('books/create', {
         book: db.book.build(req.body),
         title: 'New Book',
         errors: error.errors

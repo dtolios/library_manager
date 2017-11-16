@@ -1,20 +1,20 @@
 extends ../layout
 
 block content
-    h1 #{book.title}
-        form
+    h1 Book: #{book.title}
+        form(action="/books", method="put")
             p
                 label(for="title") Title
-                input#title(type="text", value=""+book.title+"")
+                input#title(type="text", value=""+book.title+"", name="title")
             p
                 label(for="author") Author
-                input#author(type="text", value=""+book.author+"")
+                input#author(type="text", value=""+book.author+"", name="author")
             p
                 label(for="genre") Genre
-                input#genre(type="text", value=""+book.genre+"")
+                input#genre(type="text", value=""+book.genre+"", name="genre")
             p
                 label(for="first_published") First Published
-                input#first_published(type="text", value=""+book.first_published+"")
+                input#first_published(type="text", value=""+book.first_published+"", name="first_published")
             p
                 input(type="submit", value="Update")
         h2 Loan History
@@ -28,13 +28,14 @@ block content
                     th Returned on
                     th Action
             tbody
-                tr
-                    td
-                        a(href="book_detail.html") A Brief History of Time
-                    td
-                        a(href="patron_detail.html") Andrew Chalkley
-                    td 2015-12-12
-                    td 2015-12-19
-                    td
-                    td
-                        a.button(href="return_book.html") Return Book
+                each loan in loans
+                    tr
+                        td
+                            a(href=""+loan.book_id+"") #{loan.Book.title}
+                        td
+                            a(href=""+loan.patron_id+"") #{loan.Patron.first_name} #{loan.Patron.last_name}
+                        td #{loan.loaned_on}
+                        td #{loan.return_by}
+                        td #{loan.returned_on}
+                        td
+                            a.button(href="return_book.html") Return Book

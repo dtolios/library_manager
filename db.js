@@ -22,7 +22,9 @@ db.patron = require('./models/patron')(sequelize, Sequelize);
  * Create the associations between models
  */
 db.loan.belongsTo(db.book);
-db.book.hasOne(db.loan);
+db.book.hasMany(db.loan);
+db.loan.belongsTo(db.patron);
+db.patron.hasMany(db.loan);
 
 module.exports = db;
 
