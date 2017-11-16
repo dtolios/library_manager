@@ -1,11 +1,43 @@
-const express = require('express');
-const router = express.Router();
-const Book = require('../models').Book;
+const express   = require('express');
+const db        = require('../db');
+const Sequelize = require('sequelize');
 
-/* GET all books page */
+const router    = express.Router();
+const Op        = Sequelize.Op;
+
+/* GET books list page */
 router.get('/', function(req, res, next) {
-    Book.findAll().then(function(books) {
-        res.render('books', { books: books, title: 'Books' });
+    let whereObj = {};
+    let title = 'Books';
+    if (req.query.overdue) {
+      title = 'Overdue Books';
+        whereObj = [
+          {
+            return_by: {[Op.lt]: new Date()}
+          },
+          {
+            returned_on: null
+          }
+        ];
+    }
+    if (req.query.checkedOut) {
+      title = 'Checked Out Books';
+      whereObj = [
+        {
+          returned_on: null
+        }
+      ];
+    }
+
+    db.book.findAll({
+      include: [
+        {
+          model: db.loan,
+          where: whereObj
+        }
+      ]
+    }).then(function(books) {
+        res.render('books', { books: books, title: title });
     });
 });
 
