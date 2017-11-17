@@ -9,6 +9,30 @@ router.get('/', function(req, res, next) {
   });
 });
 
+/**
+ * GET /patrons/:id
+ * Renders the patron detail page, which includes the update form
+ */
+router.get('/:id', function(req, res) {
+  db.patron.findById(req.params.id,
+    {
+      include: [{
+        model: db.loan,
+        include: [{
+          model: db.book
+        },{
+          model: db.patron
+        }]
+      }]
+    }).then(function(patron) {
+    if(patron) {
+      res.render('patrons/detail', {patron: patron, loans: patron.Loans, title: patron.first_name + " " + patron.last_name});
+    } else {
+      res.sendStatus(404);
+    }
+  });
+});
+
 /* GET patrons create page */
 router.get('/create', function(req, res) {
   res.render('patrons/create', {patrons: db.patron.build(), title: 'New Patron'});
