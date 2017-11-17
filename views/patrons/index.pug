@@ -1,9 +1,9 @@
-extends layout
+extends ../layout
 
 block content
     h1 Patrons
     p
-        a.button(href="new_patron.html") Create New Patron
+        a.button(href="patrons/create") Create New Patron
     table
         thead
             tr
@@ -15,8 +15,8 @@ block content
         tbody
             each patron in patrons
                 tr
-                    td #{patron.first_name} #{patron.last_name}
-                        a(href="/patron/"+patron.id) #{patron.name}
+                    td
+                        a(href="/patrons/"+patron.id) #{patron.first_name} #{patron.last_name}
                     td #{patron.address}
                     td #{patron.email}
                     td #{patron.library_id}

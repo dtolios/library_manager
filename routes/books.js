@@ -80,7 +80,7 @@ router.get('/:id', function(req, res) {
       }]
     }).then(function(book) {
     if(book) {
-      res.render('books/show', {book: book, loans: book.Loans, title: book.title});
+      res.render('books/detail', {book: book, loans: book.Loans, title: book.title});
     } else {
       res.sendStatus(404);
     }
