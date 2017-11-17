@@ -53,7 +53,7 @@ router.get('/create', function(req, res, next) {
   res.render('books/create', {book: db.book.build(), title: 'New Book'})
 });
 
-router.get('/:id', function(req, res, next) {
+router.get('/:id', function(req, res) {
   db.book.findById(req.params.id,
     {
       include: [{

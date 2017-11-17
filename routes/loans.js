@@ -52,8 +52,21 @@ router.get('/create', findBooks, findPatrons, getDates, function(req, res) {
     });
 });
 
+/* GET loans return book page */
+router.get('/:id/return', getDates, function(req, res) {
+  db.loan.findById(req.params.id, {
+    include: [{
+      model: db.book
+    }, {
+      model: db.patron
+    }]
+  }).then(function(loan) {
+    res.render('loans/return', { loan: loan, returnedOn: req.today, title: 'Return Book' });
+  });
+});
+
+/* POST creates a new loan */
 router.post('/', function(req, res) {
-  console.log(req.body);
   db.loan.create(req.body).then((loan) => {
     res.redirect('/loans');
   }).catch(function(error) {
@@ -68,6 +81,30 @@ router.post('/', function(req, res) {
     }
   }).catch(function(error) {
     res.sendStatus(500);
+  });
+});
+
+/* PUT updates an existing loan */
+router.put('/:id', function(req, res) {
+  console.log(req.params.id);
+  db.loan.findById(req.params.id).then(function(loan) {
+    if(loan) {
+      return loan.update(req.body);
+    } else {
+      res.sendStatus(404);
+    }
+  }).then(function(loan) {
+    res.redirect('/loans');
+  }).catch(function(error) {
+    if(error.name === 'SequelizeValidationError') {
+      const loan = db.loan.build(req.body);
+      loan.id = req.params.id;
+      res.render('loans/return', {
+        loan: loan,
+        title: 'Return Book',
+        errors: error.errors
+      })
+    }
   });
 });
 
