@@ -18,14 +18,14 @@ router.get('/create', function(req, res) {
  * POST /patrons
  * Handler for creating a new patron resource
  */
-router.post('/', function(req, res, next) {
-  db.book.create(req.body).then((book) => {
-    res.redirect('/books');
+router.post('/', function(req, res) {
+  db.patron.create(req.body).then((patron) => {
+    res.redirect('/patrons');
   }).catch(function(error) {
     if (error.name === "SequelizeValidationError") {
-      res.render('books/create', {
-        book: db.book.build(req.body),
-        title: 'New Book',
+      res.render('patrons/create', {
+        patron: db.patron.build(req.body),
+        title: 'New Patron',
         errors: error.errors
       });
     } else {
