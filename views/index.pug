@@ -8,7 +8,7 @@ block content
                 | Books
                 ul
                     li
-                        a(href="/books/new") New Book
+                        a(href="/books/create") New Book
                     li
                         a(href="/books") List All
                     li
@@ -30,6 +30,6 @@ block content
                     li
                         a(href="/loans") List All
                     li
-                        a(href="/loans?overdue=true") List Overdue
+                        a(href="/loans?filter=overdue") List Overdue
                     li
-                        a(href="/loans?checkedOut=true") List Checked Out
+                        a(href="/loans?filter=checked_out") List Checked Out

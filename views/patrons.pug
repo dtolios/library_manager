@@ -15,7 +15,7 @@ block content
         tbody
             each patron in patrons
                 tr
-                    td
+                    td #{patron.first_name} #{patron.last_name}
                         a(href="/patron/"+patron.id) #{patron.name}
                     td #{patron.address}
                     td #{patron.email}

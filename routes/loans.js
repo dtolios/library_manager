@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
   let title = 'Loans';
   let whereObject = null;
 
-  if (req.query.overdue) {
+  if (req.query.filter === 'overdue') {
     title = 'Overdue Loans';
     whereObject = [{
       return_by: {[Op.lt]: new Date()}
@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
       returned_on: null
     }];
   }
-  else if (req.query.checkedOut) {
+  else if (req.query.filter === 'checked_out') {
     title = 'Checked Out Books';
     whereObject = {
       returned_on: null

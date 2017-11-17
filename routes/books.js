@@ -4,13 +4,19 @@ const Sequelize  = require('sequelize');
 const router     = express.Router();
 const Op         = Sequelize.Op;
 
-/* GET books list page */
-router.get('/', function(req, res, next) {
+/**
+ * GET /books
+ * Renders the list of books page
+ * If the filter parameter is set, will filter results
+ */
+router.get('/', function(req, res) {
   let title = 'Books';
+  let whereObj = null;
   const include = [];
 
-  if (req.query.overdue) {
+  if (req.query.filter === 'overdue') {
     title = 'Overdue Books';
+    whereObj = [{return_by: {[Op.lt]: new Date()}}, {returned_on: null}];
     include.push(
       {
         model: db.loan,
@@ -23,7 +29,7 @@ router.get('/', function(req, res, next) {
       }
     );
   }
-  else if (req.query.checkedOut) {
+  else if (req.query.filter === 'checked_out') {
     title = 'Checked Out Books';
     include.push(
       {
@@ -49,10 +55,18 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/create', function(req, res, next) {
+/**
+ * GET /books/create
+ * Renders the book creation page
+ */
+router.get('/create', function(req, res) {
   res.render('books/create', {book: db.book.build(), title: 'New Book'})
 });
 
+/**
+ * GET /books/:id
+ * Renders the book detail page, which includes the update form
+ */
 router.get('/:id', function(req, res) {
   db.book.findById(req.params.id,
     {
@@ -73,6 +87,10 @@ router.get('/:id', function(req, res) {
   });
 });
 
+/**
+ * POST /books
+ * Handler for creating a new book resource
+ */
 router.post('/', function(req, res, next) {
   db.book.create(req.body).then((book) => {
     res.redirect('/books');
