@@ -3,14 +3,12 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Loan', {
   book_id: {
     type: DataTypes.INTEGER,
     validate: {
-      isNumeric: true,
       isInt: true,
     },
   },
   patron_id: {
     type: DataTypes.INTEGER,
     validate: {
-      isNumeric: true,
       isInt: true,
     },
   },

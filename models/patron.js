@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Patron', {
   email: {
     type: DataTypes.STRING,
     validate: {
-      notEmpty: true,
       isEmail: true,
     },
   },
@@ -34,7 +33,6 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Patron', {
   zip_code: {
     type: DataTypes.INTEGER,
     validate: {
-      isNumeric: true,
       isInt: true,
     },
   },
