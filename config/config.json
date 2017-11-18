@@ -2,6 +2,7 @@
   "development": {
     "storage": "development.db",
     "dialect": "sqlite",
+    "operatorsAliases": false,
     "define": {
       "underscored": true
     }
@@ -9,6 +10,7 @@
   "test": {
     "storage": "test.db",
     "dialect": "sqlite",
+    "operatorsAliases": false,
     "define": {
       "underscored": true
     }
@@ -16,6 +18,7 @@
   "production": {
     "storage": "production.db",
     "dialect": "sqlite",
+    "operatorsAliases": false,
     "define": {
       "underscored": true
     }
