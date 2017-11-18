@@ -130,7 +130,11 @@ router.get('/:id', getDates, (req, res) => {
       model: db.patron,
     }],
   }).then((loan) => {
-    res.render('loans/detail', { loan, returnedOn: req.today, title: 'Return Book' });
+    if (loan.returned_on === null) {
+      res.sendStatus(404);
+    } else {
+      res.render('loans/detail', {loan, returnedOn: req.today, title: 'Return Book'});
+    }
   });
 });
 

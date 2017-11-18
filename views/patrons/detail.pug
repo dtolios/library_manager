@@ -4,6 +4,8 @@ block content
     h1 Patron: #{patron.first_name} #{patron.last_name}
     form(action="/patrons/" + patron.id, method="POST")
         input(type="hidden", name="_method", value="PUT")
+        if errors
+            include ../error.pug
         p
             label(for="first_name") First Name
             input#first_name(name="first_name", type="text", value=patron.first_name)

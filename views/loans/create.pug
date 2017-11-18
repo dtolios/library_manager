@@ -3,6 +3,8 @@ extends ../layout
 block content
     h1 New Loan
     form(action="/loans", method="POST")
+        if errors
+            include ../error.pug
         p
             label(for="book_id") Book
             select#book_id(name="book_id")

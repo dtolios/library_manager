@@ -3,6 +3,8 @@ extends ../layout
 block content
     h1 New Book
     form(action="/books", method="post")
+        if errors
+            include ../error.pug
         p
             label(for="title") Title
             input#title(name="title", type="text")

@@ -4,6 +4,8 @@ block content
     h1 Book: #{book.title}
     form(action="/books/" + book.id, method="POST")
         input(type="hidden", name="_method", value="PUT")
+        if errors
+            include ../error.pug
         p
             label(for="title") Title
             input#title(value=book.title, type="text", name="title")

@@ -1,4 +1,4 @@
-mixin error
-    h2.error Oooops!
-        ul.error
-            li #{errors} is required
+h2.error Oooops!
+    ul.error
+        each error in errors
+            li #{error.path} is required
