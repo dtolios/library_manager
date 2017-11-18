@@ -3,7 +3,7 @@ const db        = require('../db');
 const router    = express.Router();
 
 /**
- * GET /patrons/:id
+ * GET /patrons
  * Renders the patron list page
  */
 router.get('/', function(req, res, next) {
@@ -49,7 +49,7 @@ router.get('/:id', function(req, res) {
  * Handler for creating a new patron resource
  */
 router.post('/', function(req, res) {
-  db.patron.create(req.body).then((patron) => {
+  db.patron.create(req.body).then(patron => {
     res.redirect('/patrons');
   }).catch(function(error) {
     if (error.name === "SequelizeValidationError") {
@@ -64,6 +64,46 @@ router.post('/', function(req, res) {
   }).catch(function(error) {
     res.sendStatus(500);
   });
+});
+
+/**
+ * PUT /patrons/:id
+ * Handler for updating an existing patron resource
+ */
+router.put('/:id', function(req, res) {
+  db.patron.findById(req.params.id,
+    {
+      include: [{
+        model: db.loan,
+        include: [{
+          model: db.book
+        },{
+          model: db.patron
+        }]
+      }]
+    })
+    .then(patron => {
+      if (patron) {
+        return patron.update(req.body);
+      } else {
+        res.sendStatus(404);
+      }
+    })
+    .then(patron => {
+      res.redirect('/patrons');
+    })
+    .catch(error => {
+      if (error.name === 'SequelizeValidationError') {
+        const patron = db.patron.build(req.body);
+        patron.id = req.params.id;
+        res.render('patrons/detail',
+          {
+            patron: patron,
+            loans: patron.Loans,
+            title: patron.first_name + " " + patron.last_name
+          });
+      }
+    });
 });
 
 module.exports = router;
