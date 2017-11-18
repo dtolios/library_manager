@@ -27,13 +27,10 @@ module.exports = (sequelize, DataTypes) => {
           isDate: true
         }
       },
-      returned_on: DataTypes.DATEONLY
+      returned_on: {
+        type: DataTypes.DATEONLY
+      }
   }, {
-      classMethods: {
-          associate: function (models) {
-              // associations can be defined here
-          }
-      },
       timestamps: false
   });
 };

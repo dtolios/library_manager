@@ -86,9 +86,8 @@ router.post('/', function(req, res) {
 
 /* PUT updates an existing loan */
 router.put('/:id', function(req, res) {
-  console.log(req.params.id);
   db.loan.findById(req.params.id).then(function(loan) {
-    if(loan) {
+    if (loan) {
       return loan.update(req.body);
     } else {
       res.sendStatus(404);

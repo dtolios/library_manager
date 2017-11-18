@@ -19,7 +19,9 @@ module.exports = (sequelize, DataTypes) => {
             notEmpty: true
           }
         },
-        first_published: DataTypes.INTEGER
+        first_published: {
+          type: DataTypes.INTEGER
+        }
       }, {
         timestamps: false
       });

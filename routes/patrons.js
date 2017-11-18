@@ -2,11 +2,22 @@ const express   = require('express');
 const db        = require('../db');
 const router    = express.Router();
 
-/* GET patrons list page */
+/**
+ * GET /patrons/:id
+ * Renders the patron list page
+ */
 router.get('/', function(req, res, next) {
   db.patron.findAll().then(function(patrons) {
     res.render('patrons', { patrons: patrons, title: 'Patrons' });
   });
+});
+
+/**
+ * GET /patrons/create
+ * Renders the patron creation page
+ */
+router.get('/create', function(req, res) {
+  res.render('patrons/create', {patrons: db.patron.build(), title: 'New Patron'});
 });
 
 /**
@@ -31,11 +42,6 @@ router.get('/:id', function(req, res) {
       res.sendStatus(404);
     }
   });
-});
-
-/* GET patrons create page */
-router.get('/create', function(req, res) {
-  res.render('patrons/create', {patrons: db.patron.build(), title: 'New Patron'});
 });
 
 /**

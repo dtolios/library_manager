@@ -12,45 +12,37 @@ const Op         = Sequelize.Op;
 router.get('/', function(req, res) {
   let title = 'Books';
   let whereObj = null;
-  const include = [];
 
   if (req.query.filter === 'overdue') {
     title = 'Overdue Books';
-    whereObj = [{return_by: {[Op.lt]: new Date()}}, {returned_on: null}];
-    include.push(
+    whereObj = [
       {
-        model: db.loan,
-        where: [{
-          return_by: {[Op.lt]: new Date()}
-          },
-          {
-            returned_on: null
-          }]
-      }
-    );
-  }
-  else if (req.query.filter === 'checked_out') {
-    title = 'Checked Out Books';
-    include.push(
-      {
-        model: db.loan,
-        where: {
-          returned_on: null
+        return_by: {
+          [Op.lt]: new Date()
         }
-      }
-    );
-  }
-  else {
-    include.push(
+      },
       {
-        model: db.loan
+        returned_on: null
       }
-    );
+    ];
+  }
+  if (req.query.filter === 'checked_out') {
+    title = 'Checked Out Books';
+    whereObj = {
+      returned_on: null
+    };
   }
 
-  db.book.findAll({include: include}).then(function(books) {
+  db.book.findAll({
+    include: [{
+      model: db.loan,
+      where: whereObj
+    }]
+  })
+  .then(books => {
     res.render('books', { books: books, title: title });
-  }).catch(function(error) {
+  })
+  .catch(error => {
     res.sendStatus(500);
   });
 });
@@ -78,7 +70,8 @@ router.get('/:id', function(req, res) {
           model: db.patron
         }]
       }]
-    }).then(function(book) {
+    })
+  .then(book => {
     if(book) {
       res.render('books/detail', {book: book, loans: book.Loans, title: book.title});
     } else {
@@ -106,6 +99,36 @@ router.post('/', function(req, res, next) {
     }
   }).catch(function(error) {
     res.sendStatus(500);
+  });
+});
+
+/**
+ * PUT /books/:id
+ * Handler for updating an existing book resource
+ */
+router.put('/:id', function(req, res) {
+  db.book.findById(req.params.id)
+  .then(book => {
+    if (book) {
+      return book.update(req.body);
+    } else {
+      res.sendStatus(404);
+    }
+  })
+  .then(book => {
+    res.redirect('/books');
+  })
+  .catch(error => {
+    console.log(error);
+    if (error.name === 'SequelizeValidationError') {
+      const book = db.book.build(req.body);
+      book.id = req.params.id;
+      res.render('books/detail', {
+        book: book,
+        title: book.title,
+        errors: error.errors
+      })
+    }
   });
 });
 
