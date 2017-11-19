@@ -26,6 +26,9 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Loan', {
   },
   returned_on: {
     type: DataTypes.DATEONLY,
+    validate: {
+      isDate: true,
+    },
   },
 }, {
   timestamps: false,

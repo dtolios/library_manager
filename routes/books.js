@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle,prefer-destructuring */
 const express = require('express');
 const winston = require('winston');
 const Sequelize = require('sequelize');
@@ -15,6 +16,7 @@ const Op = Sequelize.Op;
 router.get('/', (req, res) => {
   let title = 'Books';
   let whereObj = null;
+  delete req.session.updateBookErrors;
 
   if (req.query.filter === 'overdue') {
     title = 'Overdue Books';
@@ -79,7 +81,9 @@ router.get('/:id', (req, res) => {
   )
     .then((book) => {
       if (book) {
-        res.render('books/detail', { book, loans: book.Loans, title: book.title });
+        res.render('books/detail', {
+          book, loans: book.Loans, title: book.title, errors: req.session.updateBookErrors
+        });
       } else {
         res.sendStatus(404);
       }
@@ -130,13 +134,8 @@ router.put('/:id', (req, res) => {
     .catch((error) => {
       winston.log('error', error);
       if (error.name === 'SequelizeValidationError') {
-        const book = db.book.build(req.body);
-        book.id = req.params.id;
-        res.render('books/detail', {
-          book,
-          title: book.title,
-          errors: error.errors,
-        });
+        req.session.updateBookErrors = error.errors;
+        res.redirect(`/books/${req.params.id}`);
       }
     });
 });

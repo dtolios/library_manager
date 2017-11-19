@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 const express = require('express');
 const db = require('../db');
 
@@ -8,6 +9,7 @@ const router = express.Router();
  * Renders the patron list page
  */
 router.get('/', (req, res) => {
+  delete req.session.updatePatronErrors;
   db.patron.findAll().then((patrons) => {
     res.render('patrons', { patrons, title: 'Patrons' });
   });
@@ -40,7 +42,9 @@ router.get('/:id', (req, res) => {
     }
   ).then((patron) => {
     if (patron) {
-      res.render('patrons/detail', { patron, loans: patron.Loans, title: `${patron.first_name} ${patron.last_name}` });
+      res.render('patrons/detail', {
+        patron, loans: patron.Loans, title: `${patron.first_name} ${patron.last_name}`, errors: req.session.updatePatronErrors
+      });
     } else {
       res.sendStatus(404);
     }
@@ -98,16 +102,8 @@ router.put('/:id', (req, res) => {
     })
     .catch((error) => {
       if (error.name === 'SequelizeValidationError') {
-        const patron = db.patron.build(req.body);
-        patron.id = req.params.id;
-        res.render(
-          'patrons/detail',
-          {
-            patron,
-            loans: patron.Loans,
-            title: `${patron.first_name} ${patron.last_name}`,
-          }
-        );
+        req.session.updatePatronErrors = error.errors;
+        res.redirect(`/patrons/${req.params.id}`);
       }
     });
 });

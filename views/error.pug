@@ -1,4 +1,11 @@
+
+
 h2.error Oooops!
     ul.error
         each error in errors
-            li #{error.path} is required
+            -
+              var requiredField = error.path;
+              var fieldAsString = requiredField.replace(/_/g, ' ');
+            li
+                span(style="text-transform: capitalize;") #{fieldAsString}
+                span  is required

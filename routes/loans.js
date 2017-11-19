@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle,prefer-destructuring */
 const express = require('express');
 const winston = require('winston');
 const Sequelize = require('sequelize');
@@ -14,6 +15,7 @@ const Op = Sequelize.Op;
 router.get('/', (req, res) => {
   let title = 'Loans';
   let whereObject = null;
+  delete req.session.updateLoanErrors;
 
   if (req.query.filter === 'overdue') {
     title = 'Overdue Loans';
@@ -130,10 +132,12 @@ router.get('/:id', getDates, (req, res) => {
       model: db.patron,
     }],
   }).then((loan) => {
-    if (loan.returned_on === null) {
+    if (loan.returned_on !== null) {
       res.sendStatus(404);
     } else {
-      res.render('loans/detail', {loan, returnedOn: req.today, title: 'Return Book'});
+      res.render('loans/detail', {
+        loan, returnedOn: req.today, title: 'Return Book', errors: req.session.updateLoanErrors
+      });
     }
   });
 });
@@ -175,13 +179,8 @@ router.put('/:id', (req, res) => {
     res.redirect('/loans');
   }).catch((error) => {
     if (error.name === 'SequelizeValidationError') {
-      const loan = db.loan.build(req.body);
-      loan.id = req.params.id;
-      res.render('loans/detail', {
-        loan,
-        title: 'Return Book',
-        errors: error.errors,
-      });
+      req.session.updateLoanErrors = error.errors;
+      res.redirect(`/loans/${req.params.id}`);
     }
   });
 });
