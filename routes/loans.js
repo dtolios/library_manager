@@ -156,12 +156,6 @@ router.post('/', (req, res) => {
     if (error.name === 'SequelizeValidationError') {
       req.session.updateLoanErrors = error.errors;
       res.redirect('/loans/create')
-
-      // res.render('loans/create', {
-      //   loan: db.loan.build(req.body),
-      //   title: 'New Loan',
-      //   errors: error.errors,
-      // });
     } else {
       throw error;
     }
