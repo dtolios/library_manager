@@ -116,6 +116,7 @@ router.get('/create', findBooks, findPatrons, getDates, (req, res) => {
       loanDate: req.today,
       dueDate: req.nextWeek,
       title: 'New Loan',
+      errors: req.session.updateLoanErrors,
     }
   );
 });
@@ -147,19 +148,25 @@ router.get('/:id', getDates, (req, res) => {
  * Handler for creating a new loan resource
  */
 router.post('/', (req, res) => {
-  db.loan.create(req.body).then(() => {
+  db.loan.create(req.body)
+  .then(() => {
     res.redirect('/loans');
-  }).catch((error) => {
+  })
+  .catch((error) => {
     if (error.name === 'SequelizeValidationError') {
-      res.render('loans/create', {
-        loan: db.loan.build(req.body),
-        title: 'New Loan',
-        errors: error.errors,
-      });
+      req.session.updateLoanErrors = error.errors;
+      res.redirect('/loans/create')
+
+      // res.render('loans/create', {
+      //   loan: db.loan.build(req.body),
+      //   title: 'New Loan',
+      //   errors: error.errors,
+      // });
     } else {
       throw error;
     }
-  }).catch((error) => {
+  })
+  .catch((error) => {
     winston.log('error', error);
     res.sendStatus(500);
   });
