@@ -5,7 +5,7 @@ const db = require('../db');
 
 const Op = Sequelize.Op;
 
-exports.index = function(req, res) {
+exports.index = (req, res) => {
   let title = 'Books';
   let whereObj = null;
   delete req.session.updateBookErrors;
@@ -36,20 +36,20 @@ exports.index = function(req, res) {
       where: whereObj,
     }],
   })
-  .then((books) => {
-    res.render('books', { books, title });
-  })
-  .catch((error) => {
-    winston.log('error', error);
-    res.sendStatus(500);
-  });
+    .then((books) => {
+      res.render('books', { books, title });
+    })
+    .catch((error) => {
+      winston.log('error', error);
+      res.sendStatus(500);
+    });
 };
 
-exports.book_create_get = function(req, res) {
+exports.bookCreateGet = (req, res) => {
   res.render('books/create', { book: db.book.build(), title: 'New Book' });
 };
 
-exports.book_detail_get = function(req, res) {
+exports.bookDetailGet = (req, res) => {
   db.book.findById(
     req.params.id,
     {
@@ -63,55 +63,55 @@ exports.book_detail_get = function(req, res) {
       }],
     }
   )
-  .then((book) => {
-    if (book) {
-      res.render('books/detail', {
-        book, loans: book.Loans, title: book.title, errors: req.session.updateBookErrors
-      });
-    } else {
-      res.sendStatus(404);
-    }
-  });
+    .then((book) => {
+      if (book) {
+        res.render('books/detail', {
+          book, loans: book.Loans, title: book.title, errors: req.session.updateBookErrors
+        });
+      } else {
+        res.sendStatus(404);
+      }
+    });
 };
 
-exports.book_create_post = function(req, res) {
+exports.bookCreatePost = (req, res) => {
   db.book.create(req.body)
-  .then(() => {
-    res.redirect('/books');
-  })
-  .catch((error) => {
-    if (error.name === 'SequelizeValidationError') {
-      res.render('books/create', {
-        book: db.book.build(req.body),
-        title: 'New Book',
-        errors: error.errors,
-      });
-    } else {
-      throw error;
-    }
-  })
-  .catch((error) => {
-    winston.log('error', error);
-    res.sendStatus(500);
-  });
+    .then(() => {
+      res.redirect('/books');
+    })
+    .catch((error) => {
+      if (error.name === 'SequelizeValidationError') {
+        res.render('books/create', {
+          book: db.book.build(req.body),
+          title: 'New Book',
+          errors: error.errors,
+        });
+      } else {
+        throw error;
+      }
+    })
+    .catch((error) => {
+      winston.log('error', error);
+      res.sendStatus(500);
+    });
 };
 
-exports.book_detail_put = function(req, res) {
+exports.bookDetailPut = (req, res) => {
   db.book.findById(req.params.id)
-  .then((book) => {
-    if (!book) {
-      res.sendStatus(404);
-    }
-    return book.update(req.body);
-  })
-  .then(() => {
-    res.redirect('/books');
-  })
-  .catch((error) => {
-    winston.log('error', error);
-    if (error.name === 'SequelizeValidationError') {
-      req.session.updateBookErrors = error.errors;
-      res.redirect(`/books/${req.params.id}`);
-    }
-  });
+    .then((book) => {
+      if (!book) {
+        res.sendStatus(404);
+      }
+      return book.update(req.body);
+    })
+    .then(() => {
+      res.redirect('/books');
+    })
+    .catch((error) => {
+      winston.log('error', error);
+      if (error.name === 'SequelizeValidationError') {
+        req.session.updateBookErrors = error.errors;
+        res.redirect(`/books/${req.params.id}`);
+      }
+    });
 };
