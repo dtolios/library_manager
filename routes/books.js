@@ -27,7 +27,7 @@ router.get('/:id', bookController.bookDetailGet);
  * POST /books
  * Handler for creating a new book resource
  */
-router.post('/', bookController.bookCreatePost);
+router.post('/create', bookController.bookCreatePost);
 
 /**
  * PUT /books/:id

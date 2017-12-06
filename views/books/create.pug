@@ -2,7 +2,7 @@ extends ../layout
 
 block content
     h1 New Book
-    form(action="/books", method="post")
+    form(action="/books/create", method="post")
         if errors
             include ../error.pug
         p

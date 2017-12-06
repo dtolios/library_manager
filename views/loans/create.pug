@@ -2,7 +2,7 @@ extends ../layout
 
 block content
     h1 New Loan
-    form(action="/loans", method="POST")
+    form(action="/loans/create", method="POST")
         if errors
             include ../error.pug
         p
