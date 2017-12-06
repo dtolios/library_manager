@@ -1,7 +1,7 @@
 /* eslint-disable comma-dangle,prefer-destructuring */
 const express = require('express');
-const router = express.Router();
 
+const router = express.Router();
 const bookController = require('../controllers/bookController');
 
 /**
@@ -9,7 +9,7 @@ const bookController = require('../controllers/bookController');
  * Renders the list of books page
  * If the filter parameter is set, will filter results
  */
-router.get('/', bookController.index);
+router.get('/', bookController.bookList);
 
 /**
  * GET /books/create
@@ -24,7 +24,7 @@ router.get('/create', bookController.bookCreateGet);
 router.get('/:id', bookController.bookDetailGet);
 
 /**
- * POST /books
+ * POST /books/create
  * Handler for creating a new book resource
  */
 router.post('/create', bookController.bookCreatePost);

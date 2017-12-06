@@ -24,7 +24,7 @@ router.get('/create', loanController.findBooks, loanController.findPatrons, loan
 router.get('/:id', loanController.getDates, loanController.loanDetailGet);
 
 /**
- * POST /loans
+ * POST /loans/create
  * Handler for creating a new loan resource
  */
 router.post('/create', loanController.loanCreatePost);

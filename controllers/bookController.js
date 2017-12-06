@@ -5,7 +5,7 @@ const db = require('../db');
 
 const Op = Sequelize.Op;
 
-exports.index = (req, res) => {
+exports.bookList = (req, res) => {
   let title = 'Books';
   let whereObj = null;
   delete req.session.updateBookErrors;
