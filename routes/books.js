@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle,prefer-destructuring */
 const express = require('express');
 
 const router = express.Router();

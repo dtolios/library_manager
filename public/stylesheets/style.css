@@ -92,3 +92,24 @@ input {
 input[type=text], select {
   margin-left: 10px;
 }
+.pagination{
+  margin: 20px 0 0 0;
+}
+
+.pagination li{
+  display: inline;
+}
+
+.pagination li a{
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  padding: 3px 8px;
+  text-decoration: none;
+  color: #019875;
+}
+
+.pagination li a.active,
+.pagination li a:hover{
+  background-color: #019875;
+  color: #fff;
+}
